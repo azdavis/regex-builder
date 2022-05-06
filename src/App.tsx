@@ -9,9 +9,13 @@ const small = (g: IdGen): RegexT => ({
     { t: "begin", id: g.gen() },
     { t: "lit", s: "foo", id: g.gen() },
     {
-      t: "set",
-      mode: "anyOf",
-      es: [{ t: "range", begin: "0", end: "9", id: g.gen() }],
+      t: "oneOrMore",
+      r: {
+        t: "set",
+        mode: "anyOf",
+        es: [{ t: "range", begin: "0", end: "9", id: g.gen() }],
+        id: g.gen(),
+      },
       id: g.gen(),
     },
   ],
