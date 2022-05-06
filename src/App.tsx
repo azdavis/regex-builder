@@ -84,8 +84,8 @@ export function App(): ReactElement {
         <div className="round-box bg-red">Error: Incomplete regex.</div>
       )}
       <h2>Builder</h2>
-      <button onClick={() => onChange(small)}>Use a small sample regex</button>
-      <button onClick={() => onChange(big)}>Use a big sample regex</button>
+      <button onClick={() => onChange(small)}>Use a small sample</button>
+      <button onClick={() => onChange(big)}>Use a big sample</button>
       <Regex val={val} onChange={onChange} />
     </>
   );
