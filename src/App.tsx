@@ -70,7 +70,7 @@ export function App(): ReactElement {
       setVal(x);
     }
   }
-  const s = showRegex(val);
+  const reString = showRegex(val);
   return (
     <>
       <h1>Regex Builder</h1>
@@ -104,11 +104,14 @@ export function App(): ReactElement {
         </details>
       </div>
       <h2>Output</h2>
-      {s === null ? (
+      {reString === null ? (
         <div className="round-box bg-red">Error: Incomplete regex.</div>
       ) : (
         <div className="round-box overflow-wrap-anywhere">
-          <code>{s}</code>
+          <code>{reString}</code>
+          <button onClick={() => navigator.clipboard.writeText(reString)}>
+            Copy
+          </button>
         </div>
       )}
       <h2>Builder</h2>
