@@ -19,13 +19,9 @@ interface RegexProps {
 }
 
 export function Regex({ g, val, onChange }: RegexProps): ReactElement {
+  const cn = classNames("round-box", val.t === "choosing" ? "bg-red" : null);
   return (
-    <div
-      className={classNames(
-        "round-box",
-        val.t === "choosing" ? "bg-red" : null,
-      )}
-    >
+    <div className={cn}>
       {regexImpl(g, val, onChange)}
       <button onClick={() => onChange(null)}>Delete</button>
     </div>
@@ -55,24 +51,22 @@ function regexImpl(g: IdGen, val: RegexT, onChange: RegexChange): ReactElement {
       return (
         <>
           Any of the following:{" "}
-          {val.rs.map((r, idx) => {
-            return (
-              <Regex
-                key={r.id.toNumber()}
-                g={g}
-                val={r}
-                onChange={(r) => {
-                  const rs = [...val.rs];
-                  if (r === null) {
-                    rs.splice(idx, 1);
-                  } else {
-                    rs[idx] = r;
-                  }
-                  onChange({ t: "alt", rs, id: val.id });
-                }}
-              />
-            );
-          })}
+          {val.rs.map((r, idx) => (
+            <Regex
+              key={r.id.toNumber()}
+              g={g}
+              val={r}
+              onChange={(r) => {
+                const rs = [...val.rs];
+                if (r === null) {
+                  rs.splice(idx, 1);
+                } else {
+                  rs[idx] = r;
+                }
+                onChange({ t: "alt", rs, id: val.id });
+              }}
+            />
+          ))}
           <button
             onClick={() =>
               onChange({
@@ -90,24 +84,22 @@ function regexImpl(g: IdGen, val: RegexT, onChange: RegexChange): ReactElement {
       return (
         <>
           All of the following, in sequential order:{" "}
-          {val.rs.map((r, idx) => {
-            return (
-              <Regex
-                key={r.id.toNumber()}
-                g={g}
-                val={r}
-                onChange={(r) => {
-                  const rs = [...val.rs];
-                  if (r === null) {
-                    rs.splice(idx, 1);
-                  } else {
-                    rs[idx] = r;
-                  }
-                  onChange({ t: "seq", rs, id: val.id });
-                }}
-              />
-            );
-          })}
+          {val.rs.map((r, idx) => (
+            <Regex
+              key={r.id.toNumber()}
+              g={g}
+              val={r}
+              onChange={(r) => {
+                const rs = [...val.rs];
+                if (r === null) {
+                  rs.splice(idx, 1);
+                } else {
+                  rs[idx] = r;
+                }
+                onChange({ t: "seq", rs, id: val.id });
+              }}
+            />
+          ))}
           <button
             onClick={() =>
               onChange({ t: "seq", rs: [...val.rs, choosing(g)], id: g.gen() })
