@@ -1,57 +1,67 @@
 import { useState, type ReactElement } from "react";
-import { ObjectKeyMap } from "./ObjectKeyMap";
+import { IdGen } from "./id";
 import { Regex } from "./Regex";
 import { choosing, showRegex, type RegexT } from "./RegexT";
 
-const small: RegexT = {
+const small = (g: IdGen): RegexT => ({
   t: "seq",
   rs: [
-    { t: "begin" },
-    { t: "lit", s: "foo" },
-    { t: "set", mode: "anyOf", items: [{ t: "range", begin: "0", end: "9" }] },
+    { t: "begin", id: g.gen() },
+    { t: "lit", s: "foo", id: g.gen() },
+    {
+      t: "set",
+      mode: "anyOf",
+      items: [{ t: "range", begin: "0", end: "9", id: g.gen() }],
+      id: g.gen(),
+    },
   ],
-};
+  id: g.gen(),
+});
 
-const big: RegexT = {
+const big = (g: IdGen): RegexT => ({
   t: "seq",
   rs: [
-    { t: "begin" },
-    { t: "opt", r: { t: "lit", s: "foo" } },
-    { t: "zeroOrMore", r: { t: "lit", s: "bar" } },
-    { t: "oneOrMore", r: { t: "lit", s: "quz" } },
+    { t: "begin", id: g.gen() },
+    { t: "opt", r: { t: "lit", s: "foo", id: g.gen() }, id: g.gen() },
+    { t: "zeroOrMore", r: { t: "lit", s: "bar", id: g.gen() }, id: g.gen() },
+    { t: "oneOrMore", r: { t: "lit", s: "quz", id: g.gen() }, id: g.gen() },
     {
       t: "set",
       mode: "anyOf",
       items: [
-        { t: "char", c: "a" },
-        { t: "range", begin: "0", end: "9" },
+        { t: "char", c: "a", id: g.gen() },
+        { t: "range", begin: "0", end: "9", id: g.gen() },
       ],
+      id: g.gen(),
     },
     {
       t: "set",
       mode: "noneOf",
       items: [
-        { t: "char", c: "3" },
-        { t: "range", begin: "A", end: "Z" },
+        { t: "char", c: "3", id: g.gen() },
+        { t: "range", begin: "A", end: "Z", id: g.gen() },
       ],
+      id: g.gen(),
     },
     {
       t: "alt",
       rs: [
-        { t: "lit", s: "ariel" },
-        { t: "lit", s: "vivian" },
+        { t: "lit", s: "ariel", id: g.gen() },
+        { t: "lit", s: "vivian", id: g.gen() },
       ],
+      id: g.gen(),
     },
-    { t: "end" },
+    { t: "end", id: g.gen() },
   ],
-};
+  id: g.gen(),
+});
 
 export function App(): ReactElement {
-  const [val, setVal] = useState(small);
-  const [map] = useState(() => new ObjectKeyMap());
+  const [g] = useState(() => new IdGen());
+  const [val, setVal] = useState(() => small(g));
   function onChange(x: RegexT | null) {
     if (x === null) {
-      setVal(choosing);
+      setVal(choosing(g));
     } else {
       setVal(x);
     }
@@ -98,9 +108,9 @@ export function App(): ReactElement {
         </div>
       )}
       <h2>Builder</h2>
-      <button onClick={() => onChange(small)}>Use a small sample</button>
-      <button onClick={() => onChange(big)}>Use a big sample</button>
-      <Regex map={map} val={val} onChange={onChange} />
+      <button onClick={() => onChange(small(g))}>Use a small sample</button>
+      <button onClick={() => onChange(big(g))}>Use a big sample</button>
+      <Regex g={g} val={val} onChange={onChange} />
     </>
   );
 }

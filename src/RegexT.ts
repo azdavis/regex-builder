@@ -1,6 +1,9 @@
 import { absurd } from "./absurd";
+import { Id, IdGen } from "./id";
 
-export type SetItemT =
+export type SetItemT = SetItemBase & { id: Id };
+
+export type SetItemBase =
   | { t: "char"; c: string }
   | { t: "range"; begin: string; end: string };
 
@@ -42,7 +45,9 @@ export type RegexMode =
 // `choosing` is just because we're making a UI, it's not really part of a pure
 // mathematical regex.
 
-export type RegexT =
+export type RegexT = RegexBase & { id: Id };
+
+export type RegexBase =
   | { t: "begin" }
   | { t: "end" }
   | { t: "lit"; s: string }
@@ -106,4 +111,8 @@ export function showRegex(re: RegexT): string | null {
   }
 }
 
-export const choosing: RegexT = { t: "choosing", mode: "lit" };
+export const choosing = (g: IdGen): RegexT => ({
+  t: "choosing",
+  mode: "lit",
+  id: g.gen(),
+});

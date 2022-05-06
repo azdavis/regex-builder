@@ -1,7 +1,7 @@
 import type { ReactElement } from "react";
 import { absurd } from "./absurd";
 import { classNames } from "./classNames";
-import type { ObjectKeyMap } from "./ObjectKeyMap";
+import type { IdGen } from "./id";
 import {
   choosing,
   type RegexMode,
@@ -13,12 +13,12 @@ import {
 type RegexChange = (val: RegexT | null) => void;
 
 interface RegexProps {
-  map: ObjectKeyMap;
+  g: IdGen;
   val: RegexT;
   onChange: RegexChange;
 }
 
-export function Regex({ map, val, onChange }: RegexProps): ReactElement {
+export function Regex({ g, val, onChange }: RegexProps): ReactElement {
   return (
     <div
       className={classNames(
@@ -26,17 +26,13 @@ export function Regex({ map, val, onChange }: RegexProps): ReactElement {
         val.t === "choosing" ? "bg-red" : null,
       )}
     >
-      {regexImpl(map, val, onChange)}
+      {regexImpl(g, val, onChange)}
       <button onClick={() => onChange(null)}>Delete</button>
     </div>
   );
 }
 
-function regexImpl(
-  map: ObjectKeyMap,
-  val: RegexT,
-  onChange: RegexChange,
-): ReactElement {
+function regexImpl(g: IdGen, val: RegexT, onChange: RegexChange): ReactElement {
   switch (val.t) {
     case "begin":
       return <>The beginning of the string</>;
@@ -49,7 +45,9 @@ function regexImpl(
           <input
             type="text"
             value={val.s}
-            onChange={(ev) => onChange({ t: "lit", s: ev.target.value })}
+            onChange={(ev) =>
+              onChange({ t: "lit", s: ev.target.value, id: val.id })
+            }
           />
         </>
       );
@@ -60,8 +58,8 @@ function regexImpl(
           {val.rs.map((r, idx) => {
             return (
               <Regex
-                key={map.get(r)}
-                map={map}
+                key={r.id.toNumber()}
+                g={g}
                 val={r}
                 onChange={(r) => {
                   const rs = [...val.rs];
@@ -70,7 +68,7 @@ function regexImpl(
                   } else {
                     rs[idx] = r;
                   }
-                  onChange({ t: "alt", rs });
+                  onChange({ t: "alt", rs, id: val.id });
                 }}
               />
             );
@@ -79,7 +77,8 @@ function regexImpl(
             onClick={() =>
               onChange({
                 t: "alt",
-                rs: [...val.rs, choosing],
+                rs: [...val.rs, choosing(g)],
+                id: g.gen(),
               })
             }
           >
@@ -94,8 +93,8 @@ function regexImpl(
           {val.rs.map((r, idx) => {
             return (
               <Regex
-                key={map.get(r)}
-                map={map}
+                key={r.id.toNumber()}
+                g={g}
                 val={r}
                 onChange={(r) => {
                   const rs = [...val.rs];
@@ -104,13 +103,15 @@ function regexImpl(
                   } else {
                     rs[idx] = r;
                   }
-                  onChange({ t: "seq", rs });
+                  onChange({ t: "seq", rs, id: val.id });
                 }}
               />
             );
           })}
           <button
-            onClick={() => onChange({ t: "seq", rs: [...val.rs, choosing] })}
+            onClick={() =>
+              onChange({ t: "seq", rs: [...val.rs, choosing(g)], id: g.gen() })
+            }
           >
             Add another regex
           </button>
@@ -121,9 +122,11 @@ function regexImpl(
         <>
           Optionally:{" "}
           <Regex
-            map={map}
+            g={g}
             val={val.r}
-            onChange={(r) => onChange({ t: "opt", r: r ?? choosing })}
+            onChange={(r) =>
+              onChange({ t: "opt", r: r ?? choosing(g), id: g.gen() })
+            }
           />
         </>
       );
@@ -132,9 +135,11 @@ function regexImpl(
         <>
           Zero or more of:{" "}
           <Regex
-            map={map}
+            g={g}
             val={val.r}
-            onChange={(r) => onChange({ t: "zeroOrMore", r: r ?? choosing })}
+            onChange={(r) =>
+              onChange({ t: "zeroOrMore", r: r ?? choosing(g), id: g.gen() })
+            }
           />
         </>
       );
@@ -143,9 +148,11 @@ function regexImpl(
         <>
           One or more of:{" "}
           <Regex
-            map={map}
+            g={g}
             val={val.r}
-            onChange={(r) => onChange({ t: "oneOrMore", r: r ?? choosing })}
+            onChange={(r) =>
+              onChange({ t: "oneOrMore", r: r ?? choosing(g), id: g.gen() })
+            }
           />
         </>
       );
@@ -154,11 +161,14 @@ function regexImpl(
         <>
           <SetMode
             val={val.mode}
-            onChange={(mode) => onChange({ t: "set", mode, items: val.items })}
+            onChange={(mode) =>
+              onChange({ t: "set", mode, items: val.items, id: g.gen() })
+            }
           />
           {val.items.map((si, idx) => (
             <SetItem
-              key={map.get(si)}
+              g={g}
+              key={si.id.toNumber()}
               val={si}
               onChange={(newSI) => {
                 const items = [...val.items];
@@ -167,7 +177,7 @@ function regexImpl(
                 } else {
                   items[idx] = newSI;
                 }
-                onChange({ t: "set", mode: val.mode, items });
+                onChange({ t: "set", mode: val.mode, items, id: g.gen() });
               }}
             />
           ))}
@@ -176,7 +186,8 @@ function regexImpl(
               onChange({
                 t: "set",
                 mode: val.mode,
-                items: [...val.items, { t: "char", c: "a" }],
+                items: [...val.items, { t: "char", c: "a", id: g.gen() }],
+                id: val.id,
               })
             }
           >
@@ -187,7 +198,11 @@ function regexImpl(
               onChange({
                 t: "set",
                 mode: val.mode,
-                items: [...val.items, { t: "range", begin: "a", end: "z" }],
+                items: [
+                  ...val.items,
+                  { t: "range", begin: "a", end: "z", id: g.gen() },
+                ],
+                id: val.id,
               })
             }
           >
@@ -202,7 +217,11 @@ function regexImpl(
           <select
             value={val.mode}
             onChange={(ev) => {
-              onChange({ t: "choosing", mode: toRegexMode(ev.target.value) });
+              onChange({
+                t: "choosing",
+                mode: toRegexMode(ev.target.value),
+                id: g.gen(),
+              });
             }}
           >
             <option value="begin">The beginning of the string</option>
@@ -217,7 +236,7 @@ function regexImpl(
               A set of allowed or disallowed characters
             </option>
           </select>
-          <button onClick={() => onChange(mkDefaultRegex(val.mode))}>
+          <button onClick={() => onChange(mkDefaultRegex(g, val.mode))}>
             Choose
           </button>
         </>
@@ -230,20 +249,25 @@ function regexImpl(
 type SetItemChange = (val: SetItemT | null) => void;
 
 interface SetItemProps {
+  g: IdGen;
   val: SetItemT;
   onChange: SetItemChange;
 }
 
-function SetItem({ val, onChange }: SetItemProps): ReactElement {
+function SetItem({ g, val, onChange }: SetItemProps): ReactElement {
   return (
     <div className="round-box">
-      {setItemImpl(val, onChange)}
+      {setItemImpl(g, val, onChange)}
       <button onClick={() => onChange(null)}>Delete</button>
     </div>
   );
 }
 
-function setItemImpl(val: SetItemT, onChange: SetItemChange): ReactElement {
+function setItemImpl(
+  g: IdGen,
+  val: SetItemT,
+  onChange: SetItemChange,
+): ReactElement {
   switch (val.t) {
     case "char":
       return (
@@ -252,7 +276,9 @@ function setItemImpl(val: SetItemT, onChange: SetItemChange): ReactElement {
           <input
             type="text"
             value={val.c}
-            onChange={(ev) => onChange({ t: "char", c: ev.target.value })}
+            onChange={(ev) =>
+              onChange({ t: "char", c: ev.target.value, id: g.gen() })
+            }
           />
         </>
       );
@@ -264,7 +290,12 @@ function setItemImpl(val: SetItemT, onChange: SetItemChange): ReactElement {
             type="text"
             value={val.begin}
             onChange={(ev) =>
-              onChange({ t: "range", begin: ev.target.value, end: val.end })
+              onChange({
+                t: "range",
+                begin: ev.target.value,
+                end: val.end,
+                id: g.gen(),
+              })
             }
           />{" "}
           to{" "}
@@ -272,7 +303,12 @@ function setItemImpl(val: SetItemT, onChange: SetItemChange): ReactElement {
             type="text"
             value={val.end}
             onChange={(ev) =>
-              onChange({ t: "range", begin: val.begin, end: ev.target.value })
+              onChange({
+                t: "range",
+                begin: val.begin,
+                end: ev.target.value,
+                id: g.gen(),
+              })
             }
           />
         </>
@@ -308,41 +344,52 @@ function SetMode({ val, onChange }: SetModeProps): ReactElement {
   }
 }
 
-function mkDefaultRegex(mode: RegexMode): RegexT {
+function mkDefaultRegex(g: IdGen, mode: RegexMode): RegexT {
   switch (mode) {
     case "begin":
-      return { t: "begin" };
+      return { t: "begin", id: g.gen() };
     case "end":
-      return { t: "end" };
+      return { t: "end", id: g.gen() };
     case "lit":
-      return { t: "lit", s: "foo" };
+      return { t: "lit", s: "foo", id: g.gen() };
     case "alt":
       return {
         t: "alt",
         rs: [
-          { t: "lit", s: "foo" },
-          { t: "lit", s: "bar" },
+          { t: "lit", s: "foo", id: g.gen() },
+          { t: "lit", s: "bar", id: g.gen() },
         ],
+        id: g.gen(),
       };
     case "seq":
       return {
         t: "seq",
         rs: [
-          { t: "lit", s: "foo" },
-          { t: "lit", s: "bar" },
+          { t: "lit", s: "foo", id: g.gen() },
+          { t: "lit", s: "bar", id: g.gen() },
         ],
+        id: g.gen(),
       };
     case "opt":
-      return { t: "opt", r: { t: "lit", s: "foo" } };
+      return { t: "opt", r: { t: "lit", s: "foo", id: g.gen() }, id: g.gen() };
     case "zeroOrMore":
-      return { t: "zeroOrMore", r: { t: "lit", s: "foo" } };
+      return {
+        t: "zeroOrMore",
+        r: { t: "lit", s: "foo", id: g.gen() },
+        id: g.gen(),
+      };
     case "oneOrMore":
-      return { t: "oneOrMore", r: { t: "lit", s: "foo" } };
+      return {
+        t: "oneOrMore",
+        r: { t: "lit", s: "foo", id: g.gen() },
+        id: g.gen(),
+      };
     case "set":
       return {
         t: "set",
         mode: "anyOf",
-        items: [{ t: "range", begin: "a", end: "z" }],
+        items: [{ t: "range", begin: "a", end: "z", id: g.gen() }],
+        id: g.gen(),
       };
     default:
       return absurd(mode);
