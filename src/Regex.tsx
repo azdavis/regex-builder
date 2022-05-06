@@ -2,7 +2,13 @@ import type { ReactElement } from "react";
 import { absurd } from "./absurd";
 import { classNames } from "./classNames";
 import type { ObjectKeyMap } from "./ObjectKeyMap";
-import { choosing, RegexMode, RegexT, SetItemT, SetModeT } from "./RegexT";
+import {
+  choosing,
+  type RegexMode,
+  type RegexT,
+  type SetItemT,
+  type SetModeT,
+} from "./RegexT";
 
 type RegexChange = (val: RegexT | null) => void;
 
