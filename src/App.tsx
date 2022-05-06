@@ -48,10 +48,10 @@ const big: RegexT = {
 export function App(): ReactElement {
   const [val, setVal] = useState(small);
   function onChange(x: RegexT | null) {
-    if (x) {
-      setVal(x);
-    } else {
+    if (x === null) {
       setVal({ t: "choosing", mode: "lit" });
+    } else {
+      setVal(x);
     }
   }
   const s = showRegex(val);
@@ -78,10 +78,10 @@ export function App(): ReactElement {
         </details>
       </div>
       <h2>Output</h2>
-      {s ? (
-        <pre className="round-box">{s}</pre>
-      ) : (
+      {s === null ? (
         <div className="round-box bg-red">Error: Incomplete regex.</div>
+      ) : (
+        <pre className="round-box">{s}</pre>
       )}
       <h2>Builder</h2>
       <button onClick={() => onChange(small)}>Use a small sample</button>

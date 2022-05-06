@@ -57,10 +57,10 @@ export type RegexT =
 function allOrNone<T>(xs: (T | null)[]): T[] | null {
   const ret = [];
   for (const x of xs) {
-    if (x) {
-      ret.push(x);
-    } else {
+    if (x === null) {
       return null;
+    } else {
+      ret.push(x);
     }
   }
   return ret;
@@ -76,23 +76,23 @@ export function showRegex(re: RegexT): string | null {
       return re.s;
     case "alt": {
       const res = allOrNone(re.rs.map(showRegex));
-      return res ? res.join("|") : null;
+      return res === null ? null : res.join("|");
     }
     case "seq": {
       const res = allOrNone(re.rs.map(showRegex));
-      return res ? res.join("") : null;
+      return res === null ? null : res.join("");
     }
     case "opt": {
       const res = showRegex(re.r);
-      return res ? res + "?" : null;
+      return res === null ? null : res + "?";
     }
     case "zeroOrMore": {
       const res = showRegex(re.r);
-      return res ? res + "*" : null;
+      return res === null ? null : res + "*";
     }
     case "oneOrMore": {
       const res = showRegex(re.r);
-      return res ? res + "+" : null;
+      return res === null ? null : res + "+";
     }
     case "set": {
       const mode = showSetMode(re.mode);

@@ -51,10 +51,10 @@ function regexImpl(val: RegexT, onChange: RegexChange): ReactElement {
                 val={r}
                 onChange={(r) => {
                   const rs = [...val.rs];
-                  if (r) {
-                    rs[idx] = r;
-                  } else {
+                  if (r === null) {
                     rs.splice(idx, 1);
+                  } else {
+                    rs[idx] = r;
                   }
                   onChange({ t: "alt", rs });
                 }}
@@ -83,10 +83,10 @@ function regexImpl(val: RegexT, onChange: RegexChange): ReactElement {
                 val={r}
                 onChange={(r) => {
                   const rs = [...val.rs];
-                  if (r) {
-                    rs[idx] = r;
-                  } else {
+                  if (r === null) {
                     rs.splice(idx, 1);
+                  } else {
+                    rs[idx] = r;
                   }
                   onChange({ t: "seq", rs });
                 }}
@@ -159,10 +159,10 @@ function regexImpl(val: RegexT, onChange: RegexChange): ReactElement {
               val={si}
               onChange={(newSI) => {
                 const items = [...val.items];
-                if (newSI) {
-                  items[idx] = newSI;
-                } else {
+                if (newSI === null) {
                   items.splice(idx, 1);
+                } else {
+                  items[idx] = newSI;
                 }
                 onChange({ t: "set", mode: val.mode, items });
               }}
