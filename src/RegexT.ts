@@ -14,6 +14,7 @@ function escape(c: string): string {
     case "+":
     case "*":
     case "?":
+    case ".":
     case "^":
     case "$":
       return "\\" + c;
@@ -55,6 +56,7 @@ function showSetMode(sm: SetModeT): string {
 export type RegexMode =
   | "begin"
   | "end"
+  | "any"
   | "lit"
   | "alt"
   | "seq"
@@ -71,6 +73,7 @@ export type RegexT = RegexBase & { id: Id };
 export type RegexBase =
   | { t: "begin" }
   | { t: "end" }
+  | { t: "any" }
   | { t: "lit"; s: string }
   | { t: "alt"; rs: RegexT[] }
   | { t: "seq"; rs: RegexT[] }
@@ -98,6 +101,8 @@ export function showRegex(re: RegexT): string | null {
       return "^";
     case "end":
       return "$";
+    case "any":
+      return ".";
     case "lit":
       return re.s.split("").map(escape).join("");
     case "alt": {

@@ -34,6 +34,8 @@ function regexImpl(g: IdGen, val: RegexT, onChange: RegexChange): ReactElement {
       return <>The beginning of the string</>;
     case "end":
       return <>The end of the string</>;
+    case "any":
+      return <>Any character</>;
     case "lit":
       return (
         <>
@@ -218,6 +220,7 @@ function regexImpl(g: IdGen, val: RegexT, onChange: RegexChange): ReactElement {
           >
             <option value="begin">The beginning of the string</option>
             <option value="end">The end of the string</option>
+            <option value="any">Any character</option>
             <option value="lit">Exact text</option>
             <option value="alt">Any of the given regexes</option>
             <option value="seq">All of the given regexes in order</option>
@@ -342,6 +345,8 @@ function mkDefaultRegex(g: IdGen, mode: RegexMode): RegexT {
       return { t: "begin", id: g.gen() };
     case "end":
       return { t: "end", id: g.gen() };
+    case "any":
+      return { t: "any", id: g.gen() };
     case "lit":
       return { t: "lit", s: "foo", id: g.gen() };
     case "alt":
@@ -392,6 +397,7 @@ function toRegexMode(s: string): RegexMode {
   switch (s) {
     case "begin":
     case "end":
+    case "any":
     case "lit":
     case "alt":
     case "seq":
