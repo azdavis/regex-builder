@@ -1,4 +1,5 @@
 import { useState, type ReactElement } from "react";
+import { ObjectKeyMap } from "./ObjectKeyMap";
 import { Regex } from "./Regex";
 import { choosing, showRegex, type RegexT } from "./RegexT";
 
@@ -47,6 +48,7 @@ const big: RegexT = {
 
 export function App(): ReactElement {
   const [val, setVal] = useState(small);
+  const [map] = useState(() => new ObjectKeyMap());
   function onChange(x: RegexT | null) {
     if (x === null) {
       setVal(choosing);
@@ -74,11 +76,14 @@ export function App(): ReactElement {
             <li>Character sets and ranges allow multiple or zero characters</li>
             <li>The UI is not very polished</li>
             <li>No dark mode</li>
-            <li>React keys for mapping are not set</li>
             <li>No support for capture groups</li>
             <li>
               UI does not show how components in the builder map to components
               in the finished regex
+            </li>
+            <li>
+              Components that have sub-components do not show an error state
+              when containing no sub-components
             </li>
           </ul>
         </details>
@@ -94,7 +99,7 @@ export function App(): ReactElement {
       <h2>Builder</h2>
       <button onClick={() => onChange(small)}>Use a small sample</button>
       <button onClick={() => onChange(big)}>Use a big sample</button>
-      <Regex val={val} onChange={onChange} />
+      <Regex map={map} val={val} onChange={onChange} />
     </>
   );
 }

@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { App } from "./App";
 
-test("renders", () => {
+it("renders", () => {
   render(<App />);
   const heading = screen.getByText("Regex Builder");
   expect(heading).toBeInTheDocument();

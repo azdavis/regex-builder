@@ -1,16 +1,18 @@
 import type { ReactElement } from "react";
 import { absurd } from "./absurd";
 import { classNames } from "./classNames";
+import type { ObjectKeyMap } from "./ObjectKeyMap";
 import { choosing, RegexMode, RegexT, SetItemT, SetModeT } from "./RegexT";
 
 type RegexChange = (val: RegexT | null) => void;
 
 interface RegexProps {
+  map: ObjectKeyMap;
   val: RegexT;
   onChange: RegexChange;
 }
 
-export function Regex({ val, onChange }: RegexProps): ReactElement {
+export function Regex({ map, val, onChange }: RegexProps): ReactElement {
   return (
     <div
       className={classNames(
@@ -18,13 +20,17 @@ export function Regex({ val, onChange }: RegexProps): ReactElement {
         val.t === "choosing" ? "bg-red" : null,
       )}
     >
-      {regexImpl(val, onChange)}
+      {regexImpl(map, val, onChange)}
       <button onClick={() => onChange(null)}>Delete</button>
     </div>
   );
 }
 
-function regexImpl(val: RegexT, onChange: RegexChange): ReactElement {
+function regexImpl(
+  map: ObjectKeyMap,
+  val: RegexT,
+  onChange: RegexChange,
+): ReactElement {
   switch (val.t) {
     case "begin":
       return <>The beginning of the string</>;
@@ -48,6 +54,8 @@ function regexImpl(val: RegexT, onChange: RegexChange): ReactElement {
           {val.rs.map((r, idx) => {
             return (
               <Regex
+                key={map.get(r)}
+                map={map}
                 val={r}
                 onChange={(r) => {
                   const rs = [...val.rs];
@@ -80,6 +88,8 @@ function regexImpl(val: RegexT, onChange: RegexChange): ReactElement {
           {val.rs.map((r, idx) => {
             return (
               <Regex
+                key={map.get(r)}
+                map={map}
                 val={r}
                 onChange={(r) => {
                   const rs = [...val.rs];
@@ -105,6 +115,7 @@ function regexImpl(val: RegexT, onChange: RegexChange): ReactElement {
         <>
           Optionally:{" "}
           <Regex
+            map={map}
             val={val.r}
             onChange={(r) => onChange({ t: "opt", r: r ?? choosing })}
           />
@@ -115,6 +126,7 @@ function regexImpl(val: RegexT, onChange: RegexChange): ReactElement {
         <>
           Zero or more of:{" "}
           <Regex
+            map={map}
             val={val.r}
             onChange={(r) => onChange({ t: "zeroOrMore", r: r ?? choosing })}
           />
@@ -125,6 +137,7 @@ function regexImpl(val: RegexT, onChange: RegexChange): ReactElement {
         <>
           One or more of:{" "}
           <Regex
+            map={map}
             val={val.r}
             onChange={(r) => onChange({ t: "oneOrMore", r: r ?? choosing })}
           />
@@ -139,6 +152,7 @@ function regexImpl(val: RegexT, onChange: RegexChange): ReactElement {
           />
           {val.items.map((si, idx) => (
             <SetItem
+              key={map.get(si)}
               val={si}
               onChange={(newSI) => {
                 const items = [...val.items];
