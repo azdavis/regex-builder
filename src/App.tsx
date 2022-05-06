@@ -2,7 +2,12 @@ import { useState, type ReactElement } from "react";
 import { Regex } from "./Regex";
 import { showRegex, type RegexT } from "./RegexT";
 
-const init: RegexT = {
+const small: RegexT = {
+  t: "seq",
+  rs: [{ t: "lit", s: "foo" }, { t: "end" }],
+};
+
+const big: RegexT = {
   t: "seq",
   rs: [
     { t: "begin" },
@@ -37,7 +42,7 @@ const init: RegexT = {
 };
 
 export function App(): ReactElement {
-  const [val, setVal] = useState(init);
+  const [val, setVal] = useState(small);
   function onChange(x: RegexT | null) {
     if (x) {
       setVal(x);
@@ -70,6 +75,8 @@ export function App(): ReactElement {
         <div className="round-box bg-red">Error: Incomplete regex.</div>
       )}
       <h2>Builder</h2>
+      <button onClick={() => onChange(small)}>Use a small sample regex</button>
+      <button onClick={() => onChange(big)}>Use a big sample regex</button>
       <Regex val={val} onChange={onChange} />
     </>
   );
