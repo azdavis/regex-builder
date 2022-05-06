@@ -1,6 +1,28 @@
 import { absurd } from "./absurd";
 import { Id, IdGen } from "./id";
 
+function escape(c: string): string {
+  switch (c) {
+    case "\\":
+    case "*":
+    case "-":
+    case "[":
+    case "]":
+    case "(":
+    case ")":
+    case "{":
+    case "}":
+    case "+":
+    case "*":
+    case "?":
+    case "^":
+    case "$":
+      return "\\" + c;
+    default:
+      return c;
+  }
+}
+
 export type SetElemT = SetElemBase & { id: Id };
 
 export type SetElemBase =
@@ -10,9 +32,9 @@ export type SetElemBase =
 function showSetElem(se: SetElemT): string {
   switch (se.t) {
     case "char":
-      return se.c;
+      return escape(se.c);
     case "range":
-      return `${se.begin}-${se.end}`;
+      return `${escape(se.begin)}-${escape(se.end)}`;
     default:
       return absurd(se);
   }
@@ -78,7 +100,7 @@ export function showRegex(re: RegexT): string | null {
     case "end":
       return "$";
     case "lit":
-      return re.s;
+      return re.s.split("").map(escape).join("");
     case "alt": {
       const res = allOrNone(re.rs.map(showRegex));
       return res === null ? null : res.join("|");

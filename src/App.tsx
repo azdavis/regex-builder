@@ -85,10 +85,10 @@ export function App(): ReactElement {
           <ul>
             <li>No effort to support Unicode</li>
             <li>
-              Characters in literal strings or character sets are not escaped to
-              avoid conflicts with regex syntax
+              Escaping characters in literal strings or character sets to avoid
+              conflicts with regex syntax is not well tested
             </li>
-            <li>No effort is made to handle precedence for regex operators</li>
+            <li>No effort to handle precedence for regex operators</li>
             <li>Character sets and ranges allow multiple or zero characters</li>
             <li>The UI is not very polished</li>
             <li>No support for capture groups</li>
