@@ -90,7 +90,6 @@ export function App(): ReactElement {
             <li>No effort is made to handle precedence for regex operators</li>
             <li>Character sets and ranges allow multiple or zero characters</li>
             <li>The UI is not very polished</li>
-            <li>No dark mode</li>
             <li>No support for capture groups</li>
             <li>
               UI does not show how components in the builder map to components
