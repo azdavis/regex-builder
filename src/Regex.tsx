@@ -238,6 +238,32 @@ function regexImpl(g: IdGen, val: RegexT, onChange: RegexChange): ReactElement {
   }
 }
 
+interface SetModeProps {
+  val: SetModeT;
+  onChange: (val: SetModeT) => void;
+}
+
+function SetMode({ val, onChange }: SetModeProps): ReactElement {
+  switch (val) {
+    case "anyOf":
+      return (
+        <>
+          Any character that is:
+          <button onClick={() => onChange("noneOf")}>Switch mode</button>
+        </>
+      );
+    case "noneOf":
+      return (
+        <>
+          Any character that is not:
+          <button onClick={() => onChange("anyOf")}>Switch mode</button>
+        </>
+      );
+    default:
+      return absurd(val);
+  }
+}
+
 type SetElemChange = (val: SetElemT | null) => void;
 
 interface SetElemProps {
@@ -303,32 +329,6 @@ function SetElemImpl(
               })
             }
           />
-        </>
-      );
-    default:
-      return absurd(val);
-  }
-}
-
-interface SetModeProps {
-  val: SetModeT;
-  onChange: (val: SetModeT) => void;
-}
-
-function SetMode({ val, onChange }: SetModeProps): ReactElement {
-  switch (val) {
-    case "anyOf":
-      return (
-        <>
-          Any character that is:
-          <button onClick={() => onChange("noneOf")}>Switch mode</button>
-        </>
-      );
-    case "noneOf":
-      return (
-        <>
-          Any character that is not:
-          <button onClick={() => onChange("anyOf")}>Switch mode</button>
         </>
       );
     default:
