@@ -72,7 +72,7 @@ function regexImpl(g: IdGen, val: RegexT, onChange: RegexChange): ReactElement {
               onChange({
                 t: "alt",
                 rs: [...val.rs, choosing(g)],
-                id: g.gen(),
+                id: val.id,
               })
             }
           >
@@ -102,7 +102,7 @@ function regexImpl(g: IdGen, val: RegexT, onChange: RegexChange): ReactElement {
           ))}
           <button
             onClick={() =>
-              onChange({ t: "seq", rs: [...val.rs, choosing(g)], id: g.gen() })
+              onChange({ t: "seq", rs: [...val.rs, choosing(g)], id: val.id })
             }
           >
             Add another regex
@@ -117,7 +117,7 @@ function regexImpl(g: IdGen, val: RegexT, onChange: RegexChange): ReactElement {
             g={g}
             val={val.r}
             onChange={(r) =>
-              onChange({ t: "opt", r: r ?? choosing(g), id: g.gen() })
+              onChange({ t: "opt", r: r ?? choosing(g), id: val.id })
             }
           />
         </>
@@ -130,7 +130,7 @@ function regexImpl(g: IdGen, val: RegexT, onChange: RegexChange): ReactElement {
             g={g}
             val={val.r}
             onChange={(r) =>
-              onChange({ t: "zeroOrMore", r: r ?? choosing(g), id: g.gen() })
+              onChange({ t: "zeroOrMore", r: r ?? choosing(g), id: val.id })
             }
           />
         </>
@@ -143,7 +143,7 @@ function regexImpl(g: IdGen, val: RegexT, onChange: RegexChange): ReactElement {
             g={g}
             val={val.r}
             onChange={(r) =>
-              onChange({ t: "oneOrMore", r: r ?? choosing(g), id: g.gen() })
+              onChange({ t: "oneOrMore", r: r ?? choosing(g), id: val.id })
             }
           />
         </>
@@ -154,7 +154,7 @@ function regexImpl(g: IdGen, val: RegexT, onChange: RegexChange): ReactElement {
           <SetMode
             val={val.mode}
             onChange={(mode) =>
-              onChange({ t: "set", mode, es: val.es, id: g.gen() })
+              onChange({ t: "set", mode, es: val.es, id: val.id })
             }
           />
           {val.es.map((se, idx) => (
@@ -169,7 +169,7 @@ function regexImpl(g: IdGen, val: RegexT, onChange: RegexChange): ReactElement {
                 } else {
                   es[idx] = newSI;
                 }
-                onChange({ t: "set", mode: val.mode, es, id: g.gen() });
+                onChange({ t: "set", mode: val.mode, es, id: val.id });
               }}
             />
           ))}
@@ -212,7 +212,7 @@ function regexImpl(g: IdGen, val: RegexT, onChange: RegexChange): ReactElement {
               onChange({
                 t: "choosing",
                 mode: toRegexMode(ev.target.value),
-                id: g.gen(),
+                id: val.id,
               });
             }}
           >
@@ -269,7 +269,7 @@ function SetElemImpl(
             type="text"
             value={val.c}
             onChange={(ev) =>
-              onChange({ t: "char", c: ev.target.value, id: g.gen() })
+              onChange({ t: "char", c: ev.target.value, id: val.id })
             }
           />
         </>
@@ -286,7 +286,7 @@ function SetElemImpl(
                 t: "range",
                 begin: ev.target.value,
                 end: val.end,
-                id: g.gen(),
+                id: val.id,
               })
             }
           />{" "}
@@ -299,7 +299,7 @@ function SetElemImpl(
                 t: "range",
                 begin: val.begin,
                 end: ev.target.value,
-                id: g.gen(),
+                id: val.id,
               })
             }
           />
