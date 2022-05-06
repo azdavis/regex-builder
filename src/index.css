@@ -1,7 +1,22 @@
 body {
-  max-width: 70ch;
+  max-width: 65ch;
   margin: 0 auto;
   padding: 0.5em;
   font-family: Verdana, sans-serif;
   line-height: 1.5;
+}
+
+pre {
+  font-family: Input, Menlo, Consolas, monospace;
+}
+
+.bg-red {
+  background-color: #eaa;
+}
+
+.round-box {
+  margin: 0.5em;
+  padding: 0.5em;
+  border: 1px solid;
+  border-radius: 0.5em;
 }
