@@ -58,20 +58,22 @@ export function App(): ReactElement {
   return (
     <>
       <h1>Regex Builder</h1>
-      <p>
-        Note: This is alpha quality software. Known issues:{" "}
-        <ul>
-          <li>No effort to support Unicode</li>
-          <li>
-            Characters in literal strings or character sets are not escaped to
-            avoid conflicts with regex syntax
-          </li>
-          <li>No effort is made to handle precedence for regex operators</li>
-          <li>Character sets and ranges allow multiple or zero characters</li>
-          <li>The UI is not very polished</li>
-          <li>No dark mode</li>
-        </ul>
-      </p>
+      <div className="round-box bg-red">
+        Note: This is alpha quality software. See details for known issues.
+        <details>
+          <ul>
+            <li>No effort to support Unicode</li>
+            <li>
+              Characters in literal strings or character sets are not escaped to
+              avoid conflicts with regex syntax
+            </li>
+            <li>No effort is made to handle precedence for regex operators</li>
+            <li>Character sets and ranges allow multiple or zero characters</li>
+            <li>The UI is not very polished</li>
+            <li>No dark mode</li>
+          </ul>
+        </details>
+      </div>
       <h2>Output</h2>
       {s ? (
         <pre className="round-box">{s}</pre>
