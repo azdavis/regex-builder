@@ -61,7 +61,8 @@ export function App(): ReactElement {
     <>
       <h1>Regex Builder</h1>
       <p>
-        By <a href="https://azdavis.net">azdavis</a>
+        By <a href="https://azdavis.net">azdavis</a>.{" "}
+        <a href="https://github.com/azdavis/regex-builder">Source</a> on GitHub.
       </p>
       <div className="round-box bg-red">
         Note: This is alpha quality software. See details for known issues.
