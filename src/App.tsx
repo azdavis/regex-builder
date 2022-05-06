@@ -63,6 +63,7 @@ const big = (g: IdGen): RegexT => ({
 export function App(): ReactElement {
   const [g] = useState(() => new IdGen());
   const [val, setVal] = useState(() => small(g));
+  const [copyText, setCopyText] = useState("Copy");
   function onChange(x: RegexT | null) {
     if (x === null) {
       setVal(choosing(g));
@@ -108,8 +109,14 @@ export function App(): ReactElement {
       ) : (
         <div className="round-box overflow-wrap-anywhere">
           <code>{reString}</code>
-          <button onClick={() => navigator.clipboard.writeText(reString)}>
-            Copy
+          <button
+            onClick={() => {
+              navigator.clipboard.writeText(reString);
+              setCopyText("Copied!");
+              setTimeout(() => setCopyText("Copy"), 1000);
+            }}
+          >
+            {copyText}
           </button>
         </div>
       )}
