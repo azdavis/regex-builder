@@ -69,7 +69,7 @@ function regexImpl(val: RegexT, onChange: RegexChange): ReactElement {
               })
             }
           >
-            Add new
+            Add another regex
           </button>
         </>
       );
@@ -101,7 +101,7 @@ function regexImpl(val: RegexT, onChange: RegexChange): ReactElement {
               })
             }
           >
-            Add new
+            Add another regex
           </button>
         </>
       );
