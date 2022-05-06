@@ -249,14 +249,14 @@ function SetMode({ val, onChange }: SetModeProps): ReactElement {
       return (
         <>
           Any character that is:
-          <button onClick={() => onChange("noneOf")}>Switch mode</button>
+          <button onClick={() => onChange("noneOf")}>Negate</button>
         </>
       );
     case "noneOf":
       return (
         <>
           Any character that is not:
-          <button onClick={() => onChange("anyOf")}>Switch mode</button>
+          <button onClick={() => onChange("anyOf")}>Negate</button>
         </>
       );
     default:
