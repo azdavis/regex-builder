@@ -58,6 +58,9 @@ export function App(): ReactElement {
   return (
     <>
       <h1>Regex Builder</h1>
+      <p>
+        By <a href="https://azdavis.net">azdavis</a>
+      </p>
       <div className="round-box bg-red">
         Note: This is alpha quality software. See details for known issues.
         <details>
