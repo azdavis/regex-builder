@@ -11,6 +11,11 @@ code {
   font-family: Input, Menlo, Consolas, monospace;
 }
 
+ul,
+ol {
+  padding-inline-start: 2em;
+}
+
 .bg-red {
   background-color: #eaa;
 }
