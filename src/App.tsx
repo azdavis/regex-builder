@@ -87,7 +87,9 @@ export function App(): ReactElement {
       {s === null ? (
         <div className="round-box bg-red">Error: Incomplete regex.</div>
       ) : (
-        <pre className="round-box">{s}</pre>
+        <div className="round-box overflow-wrap-anywhere">
+          <code>{s}</code>
+        </div>
       )}
       <h2>Builder</h2>
       <button onClick={() => onChange(small)}>Use a small sample</button>

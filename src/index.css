@@ -6,7 +6,8 @@ body {
   line-height: 1.5;
 }
 
-pre {
+pre,
+code {
   font-family: Input, Menlo, Consolas, monospace;
 }
 
@@ -19,4 +20,8 @@ pre {
   padding: 0.5em;
   border: 1px solid;
   border-radius: 0.5em;
+}
+
+.overflow-wrap-anywhere {
+  overflow-wrap: anywhere;
 }
