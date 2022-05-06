@@ -29,9 +29,17 @@ body {
   }
 }
 
+a {
+  text-decoration: none;
+}
+
 a,
 a:visited {
   color: var(--link-fg);
+}
+
+a:hover {
+  text-decoration: underline;
 }
 
 pre,
