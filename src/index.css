@@ -16,7 +16,7 @@ code {
 }
 
 .round-box {
-  margin: 0.5em;
+  margin: 0.5em 0;
   padding: 0.5em;
   border: 1px solid;
   border-radius: 0.5em;
