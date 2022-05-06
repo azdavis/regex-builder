@@ -4,7 +4,11 @@ import { showRegex, type RegexT } from "./RegexT";
 
 const small: RegexT = {
   t: "seq",
-  rs: [{ t: "lit", s: "foo" }, { t: "end" }],
+  rs: [
+    { t: "begin" },
+    { t: "lit", s: "foo" },
+    { t: "set", mode: "anyOf", items: [{ t: "range", begin: "0", end: "9" }] },
+  ],
 };
 
 const big: RegexT = {
