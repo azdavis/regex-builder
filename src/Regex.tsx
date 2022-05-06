@@ -327,7 +327,7 @@ function SetMode({ val, onChange }: SetModeProps): ReactElement {
     case "noneOf":
       return (
         <>
-          Any character except those that are:
+          Any character that is not:
           <button onClick={() => onChange("anyOf")}>Switch mode</button>
         </>
       );
