@@ -1,6 +1,6 @@
 import { useState, type ReactElement } from "react";
 import { Regex } from "./Regex";
-import { showRegex, type RegexT } from "./RegexT";
+import { choosing, showRegex, type RegexT } from "./RegexT";
 
 const small: RegexT = {
   t: "seq",
@@ -49,7 +49,7 @@ export function App(): ReactElement {
   const [val, setVal] = useState(small);
   function onChange(x: RegexT | null) {
     if (x === null) {
-      setVal({ t: "choosing", mode: "lit" });
+      setVal(choosing);
     } else {
       setVal(x);
     }

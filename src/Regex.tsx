@@ -1,7 +1,7 @@
 import type { ReactElement } from "react";
 import { absurd } from "./absurd";
 import { classNames } from "./classNames";
-import type { RegexMode, RegexT, SetItemT, SetModeT } from "./RegexT";
+import { choosing, RegexMode, RegexT, SetItemT, SetModeT } from "./RegexT";
 
 type RegexChange = (val: RegexT | null) => void;
 
@@ -65,7 +65,7 @@ function regexImpl(val: RegexT, onChange: RegexChange): ReactElement {
             onClick={() =>
               onChange({
                 t: "alt",
-                rs: [...val.rs, { t: "choosing", mode: "lit" }],
+                rs: [...val.rs, choosing],
               })
             }
           >
@@ -94,12 +94,7 @@ function regexImpl(val: RegexT, onChange: RegexChange): ReactElement {
             );
           })}
           <button
-            onClick={() =>
-              onChange({
-                t: "seq",
-                rs: [...val.rs, { t: "choosing", mode: "lit" }],
-              })
-            }
+            onClick={() => onChange({ t: "seq", rs: [...val.rs, choosing] })}
           >
             Add another regex
           </button>
@@ -111,9 +106,7 @@ function regexImpl(val: RegexT, onChange: RegexChange): ReactElement {
           Optionally:{" "}
           <Regex
             val={val.r}
-            onChange={(r) =>
-              onChange({ t: "opt", r: r ?? { t: "choosing", mode: "lit" } })
-            }
+            onChange={(r) => onChange({ t: "opt", r: r ?? choosing })}
           />
         </>
       );
@@ -123,12 +116,7 @@ function regexImpl(val: RegexT, onChange: RegexChange): ReactElement {
           Zero or more of:{" "}
           <Regex
             val={val.r}
-            onChange={(r) =>
-              onChange({
-                t: "zeroOrMore",
-                r: r ?? { t: "choosing", mode: "lit" },
-              })
-            }
+            onChange={(r) => onChange({ t: "zeroOrMore", r: r ?? choosing })}
           />
         </>
       );
@@ -138,12 +126,7 @@ function regexImpl(val: RegexT, onChange: RegexChange): ReactElement {
           One or more of:{" "}
           <Regex
             val={val.r}
-            onChange={(r) =>
-              onChange({
-                t: "oneOrMore",
-                r: r ?? { t: "choosing", mode: "lit" },
-              })
-            }
+            onChange={(r) => onChange({ t: "oneOrMore", r: r ?? choosing })}
           />
         </>
       );

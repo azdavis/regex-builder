@@ -105,3 +105,5 @@ export function showRegex(re: RegexT): string | null {
       return absurd(re);
   }
 }
+
+export const choosing: RegexT = { t: "choosing", mode: "lit" };
