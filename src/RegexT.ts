@@ -1,20 +1,20 @@
 import { absurd } from "./absurd";
 import { Id, IdGen } from "./id";
 
-export type SetItemT = SetItemBase & { id: Id };
+export type SetElemT = SetElemBase & { id: Id };
 
-export type SetItemBase =
+export type SetElemBase =
   | { t: "char"; c: string }
   | { t: "range"; begin: string; end: string };
 
-function showSetItem(si: SetItemT): string {
-  switch (si.t) {
+function showSetElem(se: SetElemT): string {
+  switch (se.t) {
     case "char":
-      return si.c;
+      return se.c;
     case "range":
-      return `${si.begin}-${si.end}`;
+      return `${se.begin}-${se.end}`;
     default:
-      return absurd(si);
+      return absurd(se);
   }
 }
 
@@ -56,7 +56,7 @@ export type RegexBase =
   | { t: "opt"; r: RegexT }
   | { t: "zeroOrMore"; r: RegexT }
   | { t: "oneOrMore"; r: RegexT }
-  | { t: "set"; mode: SetModeT; items: SetItemT[] }
+  | { t: "set"; mode: SetModeT; es: SetElemT[] }
   | { t: "choosing"; mode: RegexMode };
 
 function allOrNone<T>(xs: (T | null)[]): T[] | null {
@@ -101,8 +101,8 @@ export function showRegex(re: RegexT): string | null {
     }
     case "set": {
       const mode = showSetMode(re.mode);
-      const items = re.items.map(showSetItem).join("");
-      return `[${mode}${items}]`;
+      const es = re.es.map(showSetElem).join("");
+      return `[${mode}${es}]`;
     }
     case "choosing":
       return null;

@@ -6,7 +6,7 @@ import {
   choosing,
   type RegexMode,
   type RegexT,
-  type SetItemT,
+  type SetElemT,
   type SetModeT,
 } from "./RegexT";
 
@@ -162,22 +162,22 @@ function regexImpl(g: IdGen, val: RegexT, onChange: RegexChange): ReactElement {
           <SetMode
             val={val.mode}
             onChange={(mode) =>
-              onChange({ t: "set", mode, items: val.items, id: g.gen() })
+              onChange({ t: "set", mode, es: val.es, id: g.gen() })
             }
           />
-          {val.items.map((si, idx) => (
-            <SetItem
+          {val.es.map((se, idx) => (
+            <SetElem
               g={g}
-              key={si.id.toNumber()}
-              val={si}
+              key={se.id.toNumber()}
+              val={se}
               onChange={(newSI) => {
-                const items = [...val.items];
+                const es = [...val.es];
                 if (newSI === null) {
-                  items.splice(idx, 1);
+                  es.splice(idx, 1);
                 } else {
-                  items[idx] = newSI;
+                  es[idx] = newSI;
                 }
-                onChange({ t: "set", mode: val.mode, items, id: g.gen() });
+                onChange({ t: "set", mode: val.mode, es, id: g.gen() });
               }}
             />
           ))}
@@ -186,7 +186,7 @@ function regexImpl(g: IdGen, val: RegexT, onChange: RegexChange): ReactElement {
               onChange({
                 t: "set",
                 mode: val.mode,
-                items: [...val.items, { t: "char", c: "a", id: g.gen() }],
+                es: [...val.es, { t: "char", c: "a", id: g.gen() }],
                 id: val.id,
               })
             }
@@ -198,8 +198,8 @@ function regexImpl(g: IdGen, val: RegexT, onChange: RegexChange): ReactElement {
               onChange({
                 t: "set",
                 mode: val.mode,
-                items: [
-                  ...val.items,
+                es: [
+                  ...val.es,
                   { t: "range", begin: "a", end: "z", id: g.gen() },
                 ],
                 id: val.id,
@@ -246,27 +246,27 @@ function regexImpl(g: IdGen, val: RegexT, onChange: RegexChange): ReactElement {
   }
 }
 
-type SetItemChange = (val: SetItemT | null) => void;
+type SetElemChange = (val: SetElemT | null) => void;
 
-interface SetItemProps {
+interface SetElemProps {
   g: IdGen;
-  val: SetItemT;
-  onChange: SetItemChange;
+  val: SetElemT;
+  onChange: SetElemChange;
 }
 
-function SetItem({ g, val, onChange }: SetItemProps): ReactElement {
+function SetElem({ g, val, onChange }: SetElemProps): ReactElement {
   return (
     <div className="round-box">
-      {setItemImpl(g, val, onChange)}
+      {SetElemImpl(g, val, onChange)}
       <button onClick={() => onChange(null)}>Delete</button>
     </div>
   );
 }
 
-function setItemImpl(
+function SetElemImpl(
   g: IdGen,
-  val: SetItemT,
-  onChange: SetItemChange,
+  val: SetElemT,
+  onChange: SetElemChange,
 ): ReactElement {
   switch (val.t) {
     case "char":
@@ -388,7 +388,7 @@ function mkDefaultRegex(g: IdGen, mode: RegexMode): RegexT {
       return {
         t: "set",
         mode: "anyOf",
-        items: [{ t: "range", begin: "a", end: "z", id: g.gen() }],
+        es: [{ t: "range", begin: "a", end: "z", id: g.gen() }],
         id: g.gen(),
       };
     default:

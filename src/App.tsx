@@ -11,7 +11,7 @@ const small = (g: IdGen): RegexT => ({
     {
       t: "set",
       mode: "anyOf",
-      items: [{ t: "range", begin: "0", end: "9", id: g.gen() }],
+      es: [{ t: "range", begin: "0", end: "9", id: g.gen() }],
       id: g.gen(),
     },
   ],
@@ -28,7 +28,7 @@ const big = (g: IdGen): RegexT => ({
     {
       t: "set",
       mode: "anyOf",
-      items: [
+      es: [
         { t: "char", c: "a", id: g.gen() },
         { t: "range", begin: "0", end: "9", id: g.gen() },
       ],
@@ -37,7 +37,7 @@ const big = (g: IdGen): RegexT => ({
     {
       t: "set",
       mode: "noneOf",
-      items: [
+      es: [
         { t: "char", c: "3", id: g.gen() },
         { t: "range", begin: "A", end: "Z", id: g.gen() },
       ],
