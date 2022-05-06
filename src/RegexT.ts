@@ -4,7 +4,6 @@ import { Id, IdGen } from "./id";
 function escape(c: string): string {
   switch (c) {
     case "\\":
-    case "*":
     case "-":
     case "[":
     case "]":
