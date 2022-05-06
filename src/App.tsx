@@ -50,16 +50,17 @@ export function App(): ReactElement {
     <>
       <h1>Regex Builder</h1>
       <p>
-        Note: This is alpha quality software. The following don't have great
-        support:{" "}
+        Note: This is alpha quality software. Known issues:{" "}
         <ul>
-          <li>Unicode</li>
+          <li>No effort to support Unicode</li>
           <li>
-            Escaping characters in character sets or literal strings to avoid
-            conflicts with regex syntax
+            Characters in literal strings or character sets are not escaped to
+            avoid conflicts with regex syntax
           </li>
-          <li>Handling precedence between regex operators</li>
-          <li>A super polished UI</li>
+          <li>No effort is made to handle precedence for regex operators</li>
+          <li>Character sets and ranges allow multiple or zero characters</li>
+          <li>The UI is not very polished</li>
+          <li>No dark mode</li>
         </ul>
       </p>
       <h2>Output</h2>
