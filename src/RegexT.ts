@@ -1,8 +1,5 @@
 import { absurd } from "./absurd";
 
-// `null` and `choosing` are just because we're making a UI, they're not really
-// part of a pure mathematical regex.
-
 export type SetItemT =
   | { t: "char"; c: string }
   | { t: "range"; begin: string; end: string };
@@ -42,15 +39,18 @@ export type RegexMode =
   | "oneOrMore"
   | "set";
 
+// `choosing` is just because we're making a UI, it's not really part of a pure
+// mathematical regex.
+
 export type RegexT =
   | { t: "begin" }
   | { t: "end" }
   | { t: "lit"; s: string }
   | { t: "alt"; rs: RegexT[] }
   | { t: "seq"; rs: RegexT[] }
-  | { t: "opt"; r: RegexT | null }
-  | { t: "zeroOrMore"; r: RegexT | null }
-  | { t: "oneOrMore"; r: RegexT | null }
+  | { t: "opt"; r: RegexT }
+  | { t: "zeroOrMore"; r: RegexT }
+  | { t: "oneOrMore"; r: RegexT }
   | { t: "set"; mode: SetModeT; items: SetItemT[] }
   | { t: "choosing"; mode: RegexMode };
 
@@ -66,10 +66,7 @@ function allOrNone<T>(xs: (T | null)[]): T[] | null {
   return ret;
 }
 
-export function showRegex(re: RegexT | null): string | null {
-  if (!re) {
-    return null;
-  }
+export function showRegex(re: RegexT): string | null {
   switch (re.t) {
     case "begin":
       return "^";

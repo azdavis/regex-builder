@@ -2,7 +2,7 @@ import { useState, type ReactElement } from "react";
 import { Regex } from "./Regex";
 import { showRegex, type RegexT } from "./RegexT";
 
-const init: RegexT | null = {
+const init: RegexT = {
   t: "seq",
   rs: [
     { t: "begin" },
@@ -38,6 +38,13 @@ const init: RegexT | null = {
 
 export function App(): ReactElement {
   const [val, setVal] = useState(init);
+  function onChange(x: RegexT | null) {
+    if (x) {
+      setVal(x);
+    } else {
+      setVal({ t: "choosing", mode: "lit" });
+    }
+  }
   const s = showRegex(val);
   return (
     <>
@@ -62,7 +69,7 @@ export function App(): ReactElement {
         <div className="round-box bg-red">Error: Incomplete regex.</div>
       )}
       <h2>Builder</h2>
-      <Regex val={val} onChange={setVal} />
+      <Regex val={val} onChange={onChange} />
     </>
   );
 }

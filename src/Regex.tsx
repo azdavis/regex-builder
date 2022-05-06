@@ -3,36 +3,28 @@ import { absurd } from "./absurd";
 import { classNames } from "./classNames";
 import type { RegexMode, RegexT, SetItemT, SetModeT } from "./RegexT";
 
+type RegexChange = (val: RegexT | null) => void;
+
 interface RegexProps {
-  val: RegexT | null;
-  onChange: (val: RegexT | null) => void;
+  val: RegexT;
+  onChange: RegexChange;
 }
 
 export function Regex({ val, onChange }: RegexProps): ReactElement {
-  const innards = val ? (
-    <>
-      {regexImpl(val, onChange)}
-      <button onClick={() => onChange(null)}>Delete</button>
-    </>
-  ) : (
-    "No regex selected."
-  );
   return (
     <div
       className={classNames(
         "round-box",
-        val && val.t !== "choosing" ? null : "bg-red",
+        val.t === "choosing" ? "bg-red" : null,
       )}
     >
-      {innards}
+      {regexImpl(val, onChange)}
+      <button onClick={() => onChange(null)}>Delete</button>
     </div>
   );
 }
 
-function regexImpl(
-  val: RegexT,
-  onChange: (val: RegexT | null) => void,
-): ReactElement {
+function regexImpl(val: RegexT, onChange: RegexChange): ReactElement {
   switch (val.t) {
     case "begin":
       return <>The beginning of the string</>;
@@ -45,10 +37,7 @@ function regexImpl(
           <input
             type="text"
             value={val.s}
-            onChange={(ev) => {
-              console.log("hi");
-              onChange({ t: "lit", s: ev.target.value });
-            }}
+            onChange={(ev) => onChange({ t: "lit", s: ev.target.value })}
           />
         </>
       );
@@ -120,7 +109,12 @@ function regexImpl(
       return (
         <>
           Optionally:{" "}
-          <Regex val={val.r} onChange={(r) => onChange({ t: "opt", r })} />
+          <Regex
+            val={val.r}
+            onChange={(r) =>
+              onChange({ t: "opt", r: r ?? { t: "choosing", mode: "lit" } })
+            }
+          />
         </>
       );
     case "zeroOrMore":
@@ -129,7 +123,12 @@ function regexImpl(
           Zero or more of:{" "}
           <Regex
             val={val.r}
-            onChange={(r) => onChange({ t: "zeroOrMore", r })}
+            onChange={(r) =>
+              onChange({
+                t: "zeroOrMore",
+                r: r ?? { t: "choosing", mode: "lit" },
+              })
+            }
           />
         </>
       );
@@ -139,7 +138,12 @@ function regexImpl(
           One or more of:{" "}
           <Regex
             val={val.r}
-            onChange={(r) => onChange({ t: "oneOrMore", r })}
+            onChange={(r) =>
+              onChange({
+                t: "oneOrMore",
+                r: r ?? { t: "choosing", mode: "lit" },
+              })
+            }
           />
         </>
       );
